@@ -78,7 +78,7 @@ function initDb() {
     db.exec("ALTER TABLE users ADD COLUMN provider_id TEXT");
   }
 
-  const adminEmail = process.env.ADMIN_EMAIL || "admin@localhost";
+  const adminEmail = process.env.ADMIN_EMAIL || "admin@tristastreats.com";
   const adminPassword = process.env.ADMIN_PASSWORD || "ChangeMe123!";
   const existingAdmin = db.prepare("SELECT id FROM users WHERE email = ?").get(adminEmail);
   if (!existingAdmin) {

@@ -31,7 +31,7 @@ npm start
 Set these before starting:
 
 ```powershell
-$env:ADMIN_EMAIL="you@example.com"
+$env:ADMIN_EMAIL="admin@tristastreats.com"
 $env:ADMIN_PASSWORD="UseAStrongPassword"
 $env:SESSION_SECRET="replace-this-too"
 $env:APP_BASE_URL="http://localhost:3000"

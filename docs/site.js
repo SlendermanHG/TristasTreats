@@ -154,7 +154,7 @@ async function initSite() {
           });
       }
 
-      window.location.href = `mailto:orders@tristastreats.com?subject=${subject}&body=${body}`;
+      window.location.href = `mailto:admin@tristastreats.com?subject=${subject}&body=${body}`;
     });
   }
 }
