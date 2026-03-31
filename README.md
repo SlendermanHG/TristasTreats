@@ -28,12 +28,7 @@ npm start
 
 ## Owner login
 
-Default local admin credentials:
-
-- email: `slender@slendystuff.com`
-- password: `1234`
-
-Set these before starting if you want different values:
+Set these before starting:
 
 ```powershell
 $env:ADMIN_EMAIL="you@example.com"
