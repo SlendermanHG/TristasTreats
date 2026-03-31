@@ -43,7 +43,7 @@ async function initSite() {
     loadJson("/data/facebook-comments.json")
   ]);
 
-  const imageNames = [
+  const priorityImageNames = [
     "horror-movie-themed-cake.jpg",
     "spiderweb-halloween-cake.jpg",
     "purple-rosette-cake.jpg",
@@ -51,16 +51,10 @@ async function initSite() {
     "mm-candy-drip-cake.jpg",
     "banana-pudding-desserts.jpg",
     "pink-pearl-celebration-cake.jpg",
-    "dessert-stand-display.jpg",
-    "batman-city-cake-and-cupcakes.jpg",
-    "anime-portrait-cake.jpg",
-    "dog-face-cake.jpg",
-    "teddy-bear-baby-shower-cake.jpg",
-    "minnie-mouse-pastel-cake.jpg",
-    "white-floral-sheet-cake.jpg",
-    "welder-tool-cake.jpg",
-    "yellow-brick-road-cake.jpg"
+    "dessert-stand-display.jpg"
   ];
+  const metadataKeys = Object.keys(metadata || {}).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+  const imageNames = Array.from(new Set([...priorityImageNames, ...metadataKeys]));
 
   const comments = Array.isArray(rawComments) ? rawComments : [];
   const commentCounts = comments.reduce((map, comment) => {
