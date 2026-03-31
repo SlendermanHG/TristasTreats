@@ -77,7 +77,13 @@ async function initSite() {
   document.querySelectorAll("[data-gallery-count]").forEach((node) => {
     node.textContent = String(gallery.length);
   });
+  document.querySelectorAll("[data-admin-gallery-count]").forEach((node) => {
+    node.textContent = String(gallery.length);
+  });
   document.querySelectorAll("[data-comment-count]").forEach((node) => {
+    node.textContent = String(comments.length);
+  });
+  document.querySelectorAll("[data-admin-comment-count]").forEach((node) => {
     node.textContent = String(comments.length);
   });
 
