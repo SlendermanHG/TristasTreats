@@ -105,8 +105,8 @@ async function initSite() {
     ? comments.slice(0, 6).map(createCommentCard).join("")
     : `
       <article class="card">
-        <strong>No imported Facebook comments yet</strong>
-        <p>Photo comments can be added later by updating <code>data/facebook-comments.json</code>.</p>
+        <strong>Customer comments will be featured here</strong>
+        <p>As more customer feedback is gathered, favorite notes and social highlights will appear here alongside the portfolio.</p>
       </article>
     `;
 
@@ -116,6 +116,7 @@ async function initSite() {
 
   const orderForm = document.querySelector("[data-order-form]");
   if (orderForm) {
+    const orderStatus = document.querySelector("[data-order-status]");
     orderForm.addEventListener("submit", (event) => {
       event.preventDefault();
       const formData = new FormData(orderForm);
@@ -127,20 +128,31 @@ async function initSite() {
       const occasion = String(formData.get("occasion") || "").trim();
       const details = String(formData.get("details") || "").trim();
 
+      const inquiryText = [
+        `Name: ${customerName}`,
+        `Return email: ${customerEmail}`,
+        `Phone number: ${customerPhone}`,
+        `Event date: ${eventDate || "Not provided"}`,
+        `Servings: ${servings || "Not provided"}`,
+        `Occasion: ${occasion || "Not provided"}`,
+        "",
+        "Design details:",
+        details
+      ].join("\n");
+
       const subject = encodeURIComponent(`Order Inquiry from ${customerName || "Customer"}`);
-      const body = encodeURIComponent(
-        [
-          `Name: ${customerName}`,
-          `Return email: ${customerEmail}`,
-          `Phone number: ${customerPhone}`,
-          `Event date: ${eventDate || "Not provided"}`,
-          `Servings: ${servings || "Not provided"}`,
-          `Occasion: ${occasion || "Not provided"}`,
-          "",
-          "Design details:",
-          details
-        ].join("\n")
-      );
+      const body = encodeURIComponent(inquiryText);
+
+      if (navigator.clipboard && orderStatus) {
+        navigator.clipboard
+          .writeText(inquiryText)
+          .then(() => {
+            orderStatus.textContent = "Inquiry details copied. Your email draft is opening now.";
+          })
+          .catch(() => {
+            orderStatus.textContent = "Your email draft is opening now.";
+          });
+      }
 
       window.location.href = `mailto:orders@tristastreats.com?subject=${subject}&body=${body}`;
     });

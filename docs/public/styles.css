@@ -463,6 +463,14 @@ textarea { min-height: 130px; resize: vertical; }
 .assistant-label span {
   font-size: 0.9rem;
 }
+.order-helper {
+  margin: 0;
+}
+.order-status {
+  margin: 0;
+  color: var(--accent-strong);
+  min-height: 1.4em;
+}
 
 @media (max-width: 1080px) {
   .detail-grid {
