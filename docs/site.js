@@ -113,6 +113,38 @@ async function initSite() {
   document.querySelectorAll("[data-comments-home], [data-comments-page]").forEach((node) => {
     node.innerHTML = commentsMarkup;
   });
+
+  const orderForm = document.querySelector("[data-order-form]");
+  if (orderForm) {
+    orderForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const formData = new FormData(orderForm);
+      const customerName = String(formData.get("customerName") || "").trim();
+      const customerEmail = String(formData.get("customerEmail") || "").trim();
+      const customerPhone = String(formData.get("customerPhone") || "").trim();
+      const eventDate = String(formData.get("eventDate") || "").trim();
+      const servings = String(formData.get("servings") || "").trim();
+      const occasion = String(formData.get("occasion") || "").trim();
+      const details = String(formData.get("details") || "").trim();
+
+      const subject = encodeURIComponent(`Order Inquiry from ${customerName || "Customer"}`);
+      const body = encodeURIComponent(
+        [
+          `Name: ${customerName}`,
+          `Return email: ${customerEmail}`,
+          `Phone number: ${customerPhone}`,
+          `Event date: ${eventDate || "Not provided"}`,
+          `Servings: ${servings || "Not provided"}`,
+          `Occasion: ${occasion || "Not provided"}`,
+          "",
+          "Design details:",
+          details
+        ].join("\n")
+      );
+
+      window.location.href = `mailto:orders@tristastreats.com?subject=${subject}&body=${body}`;
+    });
+  }
 }
 
 initSite();

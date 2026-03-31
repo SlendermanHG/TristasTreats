@@ -35,13 +35,46 @@
 
       <section class="two-up">
         <article class="section-card">
-          <h3>How to book</h3>
-          <div class="mini-list">
-            <div>Browse the gallery and save the styles that fit the event.</div>
-            <div>Prepare the date, serving count, theme, and flavor ideas.</div>
-            <div>Reach out with your event details, design direction, and any inspiration photos you want considered.</div>
-            <div>Be ready to share any important notes like allergies, color direction, or must-have design elements.</div>
-          </div>
+          <h3>Order Inquiry</h3>
+          <p class="muted">To start an order, include the basics below so the right quote and design direction can come back to you faster.</p>
+          <form class="order-form" data-order-form>
+            <div class="form-grid">
+              <label>
+                Your name
+                <input name="customerName" required placeholder="Full name" />
+              </label>
+              <label>
+                Return email
+                <input name="customerEmail" type="email" required placeholder="you@example.com" />
+              </label>
+            </div>
+            <div class="form-grid">
+              <label>
+                Phone number
+                <input name="customerPhone" type="tel" required placeholder="(555) 555-5555" />
+              </label>
+              <label>
+                Event date
+                <input name="eventDate" type="date" />
+              </label>
+            </div>
+            <div class="form-grid">
+              <label>
+                Servings needed
+                <input name="servings" placeholder="About 30 guests" />
+              </label>
+              <label>
+                Occasion
+                <input name="occasion" placeholder="Birthday, shower, wedding, etc." />
+              </label>
+            </div>
+            <label>
+              Design details
+              <textarea name="details" required placeholder="Theme, colors, flavors, inspiration pieces, allergies, and any must-have details."></textarea>
+            </label>
+            <button class="button accent" type="submit">Prepare Inquiry</button>
+            <p class="muted order-helper">Your inquiry will be formatted for email with your return email and phone number included.</p>
+          </form>
         </article>
 
         <article class="section-card">
@@ -53,7 +86,7 @@
 
     <footer class="footer">
       <div class="shell">
-        <p>Use the gallery as the visual reference set when discussing a custom order.</p>
+        <p>Use the gallery as the visual reference set when planning a custom order.</p>
       </div>
     </footer>
 
