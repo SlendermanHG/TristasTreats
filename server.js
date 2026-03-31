@@ -10,7 +10,7 @@ const GoogleStrategy = require("passport-google-oauth20").Strategy;
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const DB_PATH = path.join(__dirname, "tristas-treats.db");
+const DB_PATH = process.env.DB_PATH || path.join(__dirname, "tristas-treats.db");
 const FACEBOOK_COMMENTS_PATH = path.join(__dirname, "data", "facebook-comments.json");
 const GALLERY_METADATA_PATH = path.join(__dirname, "data", "gallery-metadata.json");
 const APP_BASE_URL = process.env.APP_BASE_URL || `http://localhost:${PORT}`;
