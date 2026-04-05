@@ -1,0 +1,39 @@
+{
+  "name": "tristastreats",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:push": "prisma db push",
+    "seed": "node scripts/seed.mjs"
+  },
+  "prisma": {
+    "seed": "node scripts/seed.mjs"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.6.0",
+    "bcryptjs": "^3.0.2",
+    "imapflow": "^1.0.188",
+    "lucide-react": "^0.511.0",
+    "next": "^15.3.1",
+    "nodemailer": "^7.0.3",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "zod": "^3.24.4"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "@types/node": "^22.15.3",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "eslint": "^9.25.0",
+    "eslint-config-next": "^15.3.1",
+    "prisma": "^6.6.0",
+    "typescript": "^5.8.3"
+  }
+}

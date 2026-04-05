@@ -1,0 +1,311 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum UserRole {
+  OWNER
+  TECH_ADMIN
+  ADMIN
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+  TRASHED
+}
+
+enum EmailWorkflowStage {
+  STARTED
+  INPROGRESS
+  COMPLETED
+}
+
+enum InquiryStatus {
+  NEW
+  REVIEWING
+  CONVERTED
+  CLOSED
+  TRASHED
+}
+
+enum OrderStatus {
+  INQUIRY
+  QUOTING
+  BOOKED
+  DESIGNING
+  INPROGRESS
+  READY
+  COMPLETED
+  CANCELLED
+  TRASHED
+}
+
+enum ContactMethod {
+  EMAIL
+  TEXT
+  PHONE
+}
+
+enum AvailabilityStatus {
+  AVAILABLE
+  CLAIMED
+  SOLD
+  HIDDEN
+}
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  TRASHED
+}
+
+enum UploadContext {
+  EMAIL
+  INQUIRY
+  ORDER
+  GALLERY
+  REVIEW
+  CONTENT
+}
+
+model User {
+  id                  String     @id @default(cuid())
+  email               String     @unique
+  name                String
+  role                UserRole
+  passwordHash        String
+  mustChangePassword  Boolean    @default(true)
+  isActive            Boolean    @default(true)
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
+  authoredLogs        AuditLog[] @relation("AuditActor")
+}
+
+model Contact {
+  id                  String                  @id @default(cuid())
+  displayName         String?
+  primaryEmail        String?
+  phone               String?
+  isTextCapable       Boolean?
+  preferredMethod     ContactMethod?
+  notes               String?
+  createdAt           DateTime                @default(now())
+  updatedAt           DateTime                @updatedAt
+  emailAddresses      ContactEmailAddress[]
+  inquiries           Inquiry[]
+  orders              Order[]
+  emailThreads        EmailThread[]
+  reviews             Review[]
+}
+
+model ContactEmailAddress {
+  id          String   @id @default(cuid())
+  contactId   String
+  email       String   @unique
+  isPrimary   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  contact     Contact  @relation(fields: [contactId], references: [id], onDelete: Cascade)
+}
+
+model EmailThread {
+  id               String              @id @default(cuid())
+  contactId        String?
+  subject          String
+  stage            EmailWorkflowStage  @default(STARTED)
+  externalThreadId String?             @unique
+  mailboxAddress   String
+  isTrashed        Boolean             @default(false)
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  contact          Contact?            @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  messages         EmailMessage[]
+  inquiries        Inquiry[]
+  orders           Order[]
+}
+
+model EmailMessage {
+  id               String    @id @default(cuid())
+  threadId         String
+  externalMessageId String?  @unique
+  fromEmail        String
+  toEmail          String
+  subject          String
+  bodyText         String?
+  bodyHtml         String?
+  sentAt           DateTime?
+  receivedAt       DateTime?
+  isDraft          Boolean   @default(false)
+  isInbound        Boolean
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  thread           EmailThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  uploads          Upload[]
+}
+
+model Inquiry {
+  id                    String         @id @default(cuid())
+  contactId             String?
+  emailThreadId         String?
+  status                InquiryStatus  @default(NEW)
+  name                  String
+  email                 String
+  phone                 String
+  isTextCapable         Boolean        @default(false)
+  preferredMethod       ContactMethod?
+  eventDate             DateTime?
+  pickupTime            String?
+  orderType             String?
+  budget                Decimal?       @db.Decimal(10, 2)
+  description           String
+  internalNotes         String?
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+  contact               Contact?       @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  emailThread           EmailThread?   @relation(fields: [emailThreadId], references: [id], onDelete: SetNull)
+  uploads               Upload[]
+}
+
+model Order {
+  id                    String        @id @default(cuid())
+  contactId             String?
+  emailThreadId         String?
+  title                 String
+  description           String?
+  status                OrderStatus   @default(INQUIRY)
+  eventDate             DateTime?
+  pickupOrDeliveryTime  String?
+  quotedPrice           Decimal?      @db.Decimal(10, 2)
+  finalPrice            Decimal?      @db.Decimal(10, 2)
+  depositRequired       Decimal?      @db.Decimal(10, 2)
+  depositPaid           Decimal?      @db.Decimal(10, 2)
+  internalNotes         String?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+  contact               Contact?      @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  emailThread           EmailThread?  @relation(fields: [emailThreadId], references: [id], onDelete: SetNull)
+  lineItems             OrderLineItem[]
+  uploads               Upload[]
+  galleryEntries        GalleryEntry[]
+}
+
+model OrderLineItem {
+  id          String   @id @default(cuid())
+  orderId     String
+  label       String
+  amount      Decimal? @db.Decimal(10, 2)
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model GalleryEntry {
+  id               String        @id @default(cuid())
+  orderId          String?
+  title            String
+  slug             String        @unique
+  description      String?
+  categories       String[]
+  status           ContentStatus @default(DRAFT)
+  sortOrder        Int           @default(0)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  order            Order?        @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  uploads          Upload[]
+  reviewLinks      ReviewGalleryLink[]
+}
+
+model Review {
+  id               String            @id @default(cuid())
+  contactId        String?
+  reviewerName     String
+  reviewerEmail    String?
+  body             String
+  rating           Int?
+  status           ReviewStatus      @default(PENDING)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  contact          Contact?          @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  uploads          Upload[]
+  galleryLinks     ReviewGalleryLink[]
+}
+
+model ReviewGalleryLink {
+  id             String       @id @default(cuid())
+  reviewId       String
+  galleryEntryId String
+  createdAt      DateTime     @default(now())
+  review         Review       @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  galleryEntry   GalleryEntry @relation(fields: [galleryEntryId], references: [id], onDelete: Cascade)
+
+  @@unique([reviewId, galleryEntryId])
+}
+
+model AbundanceItem {
+  id              String             @id @default(cuid())
+  title           String
+  description     String?
+  price           Decimal?           @db.Decimal(10, 2)
+  status          AvailabilityStatus @default(AVAILABLE)
+  expiresAt       DateTime?
+  statusNote      String?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  uploads         Upload[]
+}
+
+model SiteContentBlock {
+  id              String        @id @default(cuid())
+  pageKey         String
+  blockKey        String
+  label           String
+  contentJson     Json
+  status          ContentStatus @default(DRAFT)
+  isVisible       Boolean       @default(true)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@unique([pageKey, blockKey])
+}
+
+model Upload {
+  id               String         @id @default(cuid())
+  context          UploadContext
+  fileName         String
+  originalName     String
+  mimeType         String
+  storagePath      String
+  emailMessageId   String?
+  inquiryId        String?
+  orderId          String?
+  galleryEntryId   String?
+  reviewId         String?
+  abundanceItemId  String?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  emailMessage     EmailMessage?  @relation(fields: [emailMessageId], references: [id], onDelete: Cascade)
+  inquiry          Inquiry?       @relation(fields: [inquiryId], references: [id], onDelete: Cascade)
+  order            Order?         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  galleryEntry     GalleryEntry?  @relation(fields: [galleryEntryId], references: [id], onDelete: Cascade)
+  review           Review?        @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  abundanceItem    AbundanceItem? @relation(fields: [abundanceItemId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id            String   @id @default(cuid())
+  actorUserId   String?
+  action        String
+  entityType    String
+  entityId      String?
+  detailJson    Json?
+  createdAt     DateTime @default(now())
+  actor         User?    @relation("AuditActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+}

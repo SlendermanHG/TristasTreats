@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: tristastreats-app
+    env: node
+    plan: starter
+    buildCommand: npm install && npm run prisma:generate && npm run build
+    startCommand: npm start
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: tristastreats-db
+          property: connectionString
+      - key: DIRECT_URL
+        fromDatabase:
+          name: tristastreats-db
+          property: connectionString
+      - key: APP_URL
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: TRISTA_MAILBOX_HOST
+        value: imap.tristastreats.com
+      - key: TRISTA_SMTP_HOST
+        value: smtp.tristastreats.com
+      - key: TRISTA_SMTP_PORT
+        value: "587"
+      - key: TRISTA_MAILBOX_USER
+        value: trista@tristastreats.com
+databases:
+  - name: tristastreats-db
+    plan: starter
