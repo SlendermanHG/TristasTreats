@@ -91,6 +91,41 @@
         text-transform: uppercase;
       }
 
+      .actions {
+        margin-top: 24px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 50px;
+        padding: 0 20px;
+        border: 1px solid rgba(255, 215, 174, 0.28);
+        border-radius: 999px;
+        color: #1a0e11;
+        background: linear-gradient(180deg, #ffd7ae, #f0b26f);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+        font: 700 0.96rem/1 Arial, Helvetica, sans-serif;
+        letter-spacing: 0.04em;
+        text-decoration: none;
+      }
+
+      .button:hover,
+      .button:focus-visible {
+        transform: translateY(-1px);
+        filter: brightness(1.03);
+      }
+
+      .email {
+        color: var(--accent-soft);
+        font: 700 0.96rem/1.6 Arial, Helvetica, sans-serif;
+        text-decoration: none;
+      }
+
       .note {
         margin-top: 10px;
         color: var(--muted);
@@ -172,6 +207,13 @@
             with refreshed branding, current work, and a cleaner way to browse custom cakes and celebration pieces.
           </p>
           <div class="site">www.tristastreats.com</div>
+          <div class="actions">
+            <a class="button" href="mailto:trista@tristastreats.com?subject=Tristas%20Treats%20Inquiry">Email Trista</a>
+          </div>
+          <p class="note">
+            For orders or questions, email
+            <a class="email" href="mailto:trista@tristastreats.com">trista@tristastreats.com</a>.
+          </p>
           <p class="note">Please check back soon.</p>
         </div>
 
