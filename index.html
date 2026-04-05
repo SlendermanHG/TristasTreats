@@ -112,17 +112,59 @@
         font: 700 0.96rem/1 Arial, Helvetica, sans-serif;
         letter-spacing: 0.04em;
         text-decoration: none;
-      }
-
-      .button.secondary {
-        color: var(--accent-soft);
-        background: rgba(255, 255, 255, 0.02);
+        cursor: pointer;
       }
 
       .button:hover,
       .button:focus-visible {
         transform: translateY(-1px);
         filter: brightness(1.03);
+      }
+
+      .provider-panel {
+        margin-top: 18px;
+        padding: 18px;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .provider-panel[hidden] {
+        display: none;
+      }
+
+      .provider-title {
+        margin: 0 0 12px;
+        color: var(--accent-soft);
+        font: 700 0.92rem/1.4 Arial, Helvetica, sans-serif;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .provider-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .provider-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 0 16px;
+        border: 1px solid rgba(255, 215, 174, 0.2);
+        border-radius: 999px;
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.04);
+        font: 700 0.92rem/1 Arial, Helvetica, sans-serif;
+        text-decoration: none;
+      }
+
+      .provider-copy {
+        margin: 12px 0 0;
+        color: var(--muted);
+        font: 400 0.92rem/1.7 Arial, Helvetica, sans-serif;
       }
 
       .email {
@@ -213,15 +255,36 @@
           </p>
           <div class="site">www.tristastreats.com</div>
           <div class="actions">
-            <a
-              class="button"
-              href="https://mail.google.com/mail/?view=cm&fs=1&to=trista@tristastreats.com&su=Tristas%20Treats%20Inquiry"
-            >
+            <button class="button" type="button" data-email-toggle aria-expanded="false" aria-controls="email-options">
               Email Trista
-            </a>
-            <a class="button secondary" href="mailto:trista@tristastreats.com?subject=Tristas%20Treats%20Inquiry">
-              Use Mail App
-            </a>
+            </button>
+          </div>
+          <div class="provider-panel" id="email-options" hidden>
+            <p class="provider-title">Choose Your Email Provider</p>
+            <div class="provider-links">
+              <a
+                class="provider-link"
+                href="https://mail.google.com/mail/?view=cm&fs=1&to=trista@tristastreats.com&su=Tristas%20Treats%20Inquiry"
+              >
+                Gmail
+              </a>
+              <a
+                class="provider-link"
+                href="https://outlook.live.com/mail/0/deeplink/compose?to=trista@tristastreats.com&subject=Tristas%20Treats%20Inquiry"
+              >
+                Outlook
+              </a>
+              <a
+                class="provider-link"
+                href="https://compose.mail.yahoo.com/?to=trista@tristastreats.com&subject=Tristas%20Treats%20Inquiry"
+              >
+                Yahoo
+              </a>
+              <a class="provider-link" href="mailto:trista@tristastreats.com?subject=Tristas%20Treats%20Inquiry">
+                Apple Mail / Default App
+              </a>
+            </div>
+            <p class="provider-copy">If your provider is different, send to trista@tristastreats.com.</p>
           </div>
           <p class="note">
             For orders or questions, email
@@ -243,5 +306,17 @@
         </div>
       </section>
     </main>
+    <script>
+      const toggle = document.querySelector("[data-email-toggle]");
+      const panel = document.getElementById("email-options");
+
+      if (toggle && panel) {
+        toggle.addEventListener("click", () => {
+          const nextHidden = !panel.hidden;
+          panel.hidden = nextHidden;
+          toggle.setAttribute("aria-expanded", String(!nextHidden));
+        });
+      }
+    </script>
   </body>
 </html>
