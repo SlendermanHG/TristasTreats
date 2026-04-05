@@ -114,6 +114,11 @@
         text-decoration: none;
       }
 
+      .button.secondary {
+        color: var(--accent-soft);
+        background: rgba(255, 255, 255, 0.02);
+      }
+
       .button:hover,
       .button:focus-visible {
         transform: translateY(-1px);
@@ -208,7 +213,15 @@
           </p>
           <div class="site">www.tristastreats.com</div>
           <div class="actions">
-            <a class="button" href="mailto:trista@tristastreats.com?subject=Tristas%20Treats%20Inquiry">Email Trista</a>
+            <a
+              class="button"
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=trista@tristastreats.com&su=Tristas%20Treats%20Inquiry"
+            >
+              Email Trista
+            </a>
+            <a class="button secondary" href="mailto:trista@tristastreats.com?subject=Tristas%20Treats%20Inquiry">
+              Use Mail App
+            </a>
           </div>
           <p class="note">
             For orders or questions, email
